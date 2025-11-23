@@ -8,7 +8,8 @@ Aplikasi Flutter untuk manajemen produk toko dengan fitur Login, Registrasi, dan
 
 ### 1. Halaman Login - Jes
 
-![Screenshot Login](screenshots/login.png)
+<img width="407" height="828" alt="iPhone-13-PRO-localhost (15)" src="https://github.com/user-attachments/assets/42d1b8fb-1ba0-4d71-9f28-f17d9f6817b7" />
+![Screenshot Login]
 
 **Penjelasan Kode:**
 ```dart
@@ -41,7 +42,8 @@ Navigator.pushReplacement(
 
 ### 2. Halaman Registrasi - Jes
 
-![Screenshot Registrasi](screenshots/registrasi.png)
+<img width="407" height="828" alt="iPhone-13-PRO-localhost (14)" src="https://github.com/user-attachments/assets/b0164a60-93fe-4a16-9dcd-cdcf1aacdcb1" />
+![Screenshot Registrasi]
 
 **Penjelasan Kode:**
 ```dart
@@ -66,7 +68,8 @@ Navigator.pop(context);
 
 ### 3. Halaman List Produk - Jes
 
-![Screenshot List Produk](screenshots/list_produk.png)
+<img width="407" height="828" alt="iPhone-13-PRO-localhost (16)" src="https://github.com/user-attachments/assets/18ea45fd-ded3-453f-a40e-9198016c5120" />
+![Screenshot List Produk]
 
 **Penjelasan Kode:**
 ```dart
@@ -102,7 +105,8 @@ InkWell(
 
 ### 4. Halaman Tambah Produk - Jes
 
-![Screenshot Tambah Produk](screenshots/tambah_produk.png)
+<img width="407" height="828" alt="iPhone-13-PRO-localhost (17)" src="https://github.com/user-attachments/assets/a16e7531-f226-4aee-a5b8-555c803cf61d" />
+![Screenshot Tambah Produk]
 
 **Penjelasan Kode:**
 ```dart
@@ -127,7 +131,8 @@ validator: (value) {
 
 ### 5. Halaman Ubah Produk - Jes
 
-![Screenshot Ubah Produk](screenshots/ubah_produk.png)
+<img width="407" height="828" alt="iPhone-13-PRO-localhost (19)" src="https://github.com/user-attachments/assets/18dd5e79-31d9-4af5-aeac-76689f958b94" />
+![Screenshot Ubah Produk]
 
 **Penjelasan Kode:**
 ```dart
@@ -158,7 +163,8 @@ void isUpdate() {
 
 ### 6. Halaman Detail Produk - Jes
 
-![Screenshot Detail Produk](screenshots/detail_produk.png)
+<img width="407" height="828" alt="iPhone-13-PRO-localhost (18)" src="https://github.com/user-attachments/assets/6f895736-7870-43e8-8c26-874f5c2daa66" />
+![Screenshot Detail Produk]
 
 **Penjelasan Kode:**
 ```dart
@@ -203,7 +209,8 @@ Widget _buildInfoRow({
 
 ### 7. Dialog Konfirmasi Hapus
 
-![Screenshot Dialog Hapus](screenshots/dialog_hapus.png)
+<img width="407" height="828" alt="iPhone-13-PRO-localhost (20)" src="https://github.com/user-attachments/assets/150ea3c6-0097-4d2c-b948-c7f80c360c3b" />
+![Screenshot Dialog Hapus]
 
 **Penjelasan Kode:**
 ```dart
