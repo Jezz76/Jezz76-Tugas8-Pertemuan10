@@ -1,295 +1,826 @@
-# TokoGW - Aplikasi Manajemen Produk
+# Aplikasi Toko Kita - CRUD Flutter dengan REST API
 
-Aplikasi Flutter untuk manajemen produk toko dengan fitur Login, Registrasi, dan CRUD Produk.
-
----
-
-## 📱 Screenshot dan Penjelasan Kode
-
-### 1. Halaman Login - Jes
-
-<img width="407" height="828" alt="iPhone-13-PRO-localhost (15)" src="https://github.com/user-attachments/assets/42d1b8fb-1ba0-4d71-9f28-f17d9f6817b7" />
-![Screenshot Login]
-
-**Penjelasan Kode:**
-```dart
-// Validasi Email dengan Regex
-validator: (value) {
-  if (value == null || value.trim().isEmpty) {
-    return 'Email harus diisi';
-  }
-  final regex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}");
-  if (!regex.hasMatch(value.trim())) {
-    return 'Email tidak valid';
-  }
-  return null;
-}
-
-// Routing ke Halaman Produk setelah Login
-Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => const ProdukPage()),
-);
-```
-
-**Fitur:**
-- Validasi format email
-- Password visibility toggle
-- Loading state
-- Redirect ke halaman produk
+Nama: Jeslan Surya Utama  
+NIM: Jezz76  
+Tugas: Pertemuan 11 - CRUD 2  
 
 ---
 
-### 2. Halaman Registrasi - Jes
+## Daftar Isi
 
-<img width="407" height="828" alt="iPhone-13-PRO-localhost (14)" src="https://github.com/user-attachments/assets/b0164a60-93fe-4a16-9dcd-cdcf1aacdcb1" />
-![Screenshot Registrasi]
-
-**Penjelasan Kode:**
-```dart
-// Validasi Konfirmasi Password
-validator: (value) {
-  if (value == null || value != _passwordTextboxController.text) {
-    return 'Konfirmasi Password tidak sama';
-  }
-  return null;
-}
-
-// Kembali ke Login setelah Registrasi
-Navigator.pop(context);
-```
-
-**Fitur:**
-- Form 4 field (nama, email, password, konfirmasi)
-- Validasi password match
-- Auto redirect ke login
+1. Dependencies
+2. Struktur Project
+3. Implementasi Helpers
+4. Implementasi Bloc
+5. Implementasi UI Pages
+6. Implementasi Widget Dialog
+7. Cara Menjalankan
+8. Testing
+9. Screenshot
 
 ---
 
-### 3. Halaman List Produk - Jes
+## Dependencies
 
-<img width="407" height="828" alt="iPhone-13-PRO-localhost (16)" src="https://github.com/user-attachments/assets/18ea45fd-ded3-453f-a40e-9198016c5120" />
-![Screenshot List Produk]
+File: pubspec.yaml
 
-**Penjelasan Kode:**
-```dart
-// Format Currency
-String _formatCurrency(int amount) {
-  return amount.toString().replaceAllMapped(
-    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-    (Match m) => '${m[1]}.',
-  );
-}
-
-// Navigasi ke Detail
-InkWell(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProdukDetail(produk: produk),
-      ),
-    );
-  },
-  child: // ... card produk
-)
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  http: ^0.13.4
+  shared_preferences: ^2.0.11
 ```
 
-**Fitur:**
-- Statistik total produk & nilai
-- Card produk dengan format currency
-- Drawer menu dengan logout
-- Navigasi ke tambah/detail produk
+Jalankan: `flutter pub get`
 
 ---
 
-### 4. Halaman Tambah Produk - Jes
-
-<img width="407" height="828" alt="iPhone-13-PRO-localhost (17)" src="https://github.com/user-attachments/assets/a16e7531-f226-4aee-a5b8-555c803cf61d" />
-![Screenshot Tambah Produk]
-
-**Penjelasan Kode:**
-```dart
-// Validasi Harga
-validator: (value) {
-  if (value == null || value.trim().isEmpty) {
-    return 'Harga harus diisi';
-  }
-  if (int.tryParse(value) == null) {
-    return 'Harga harus berupa angka';
-  }
-  return null;
-}
-```
-
-**Fitur:**
-- Form 3 field (kode, nama, harga)
-- Validasi semua field
-- SnackBar notifikasi
-
----
-
-### 5. Halaman Ubah Produk - Jes
-
-<img width="407" height="828" alt="iPhone-13-PRO-localhost (19)" src="https://github.com/user-attachments/assets/18dd5e79-31d9-4af5-aeac-76689f958b94" />
-![Screenshot Ubah Produk]
-
-**Penjelasan Kode:**
-```dart
-// Auto-fill form untuk Edit
-void isUpdate() {
-  if (widget.produk != null) {
-    setState(() {
-      judul = "Ubah Produk - Jes";
-      tombolSubmit = "UBAH";
-      _kodeProdukTextboxController.text = widget.produk!.kodeProduk!;
-      _namaProdukTextboxController.text = widget.produk!.namaProduk!;
-      _hargaProdukTextboxController.text = 
-          widget.produk!.hargaProduk.toString();
-    });
-  } else {
-    judul = "Tambah Produk - Jes";
-    tombolSubmit = "SIMPAN";
-  }
-}
-```
-
-**Fitur:**
-- Form auto-fill data existing
-- Mode dinamis (tambah/ubah)
-- Update data produk
-
----
-
-### 6. Halaman Detail Produk - Jes
-
-<img width="407" height="828" alt="iPhone-13-PRO-localhost (18)" src="https://github.com/user-attachments/assets/6f895736-7870-43e8-8c26-874f5c2daa66" />
-![Screenshot Detail Produk]
-
-**Penjelasan Kode:**
-```dart
-// Widget Info Row dengan Icon
-Widget _buildInfoRow({
-  required IconData icon,
-  required String label,
-  required String value,
-  required Color color,
-}) {
-  return Row(
-    children: [
-      Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: color, size: 24),
-      ),
-      const SizedBox(width: 16),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-            Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-```
-
-**Fitur:**
-- Info produk lengkap dengan icon berwarna
-- Tombol Edit & Hapus
-- Dialog konfirmasi hapus
-
----
-
-### 7. Dialog Konfirmasi Hapus
-
-<img width="407" height="828" alt="iPhone-13-PRO-localhost (20)" src="https://github.com/user-attachments/assets/150ea3c6-0097-4d2c-b948-c7f80c360c3b" />
-![Screenshot Dialog Hapus]
-
-**Penjelasan Kode:**
-```dart
-void confirmHapus() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Row(
-          children: const [
-            Icon(Icons.warning, color: Colors.red),
-            SizedBox(width: 12),
-            Text('Konfirmasi Hapus'),
-          ],
-        ),
-        content: const Text('Apakah Anda yakin ingin menghapus produk ini?'),
-        actions: [
-          TextButton(
-            child: const Text('BATAL'),
-            onPressed: () => Navigator.pop(context),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('HAPUS'),
-            onPressed: () {
-              Navigator.pop(context); // Tutup dialog
-              Navigator.pop(context); // Kembali ke list
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-```
-
-**Fitur:**
-- Konfirmasi sebelum hapus
-- Pop 2x (dialog + detail page)
-
----
-
-## 🔄 Flow Routing
-
-```
-[Login] → [Registrasi]
-   ↓           ↓
-   └──→ [List Produk] ←──┘
-           ↓
-   ┌───────┼────────┐
-   ↓       ↓        ↓
-[Tambah] [Detail] [Logout]
-         ↓    ↓
-      [Edit] [Hapus]
-```
-
-**Routing:**
-- `Navigator.pushReplacement()` → Login ke List, Logout ke Login
-- `Navigator.push()` → List ke Detail/Form
-- `Navigator.pop()` → Registrasi ke Login, Form/Detail ke List
-
----
-
-## 📁 Struktur File
+## Struktur Project
 
 ```
 lib/
-├── main.dart                 # Entry point + Theme
+├── main.dart
+├── helpers/
+│   ├── user_info.dart
+│   ├── app_exception.dart
+│   ├── api.dart
+│   └── api_url.dart
+├── bloc/
+│   ├── registrasi_bloc.dart
+│   ├── login_bloc.dart
+│   ├── logout_bloc.dart
+│   └── produk_bloc.dart
 ├── model/
-│   ├── produk.dart
 │   ├── login.dart
-│   └── registrasi.dart
-└── ui/
-    ├── login_page.dart
-    ├── registrasi_page.dart
-    ├── produk_page.dart
-    ├── produk_form.dart
-    └── produk_detail.dart
+│   ├── registrasi.dart
+│   └── produk.dart
+├── ui/
+│   ├── login_page.dart
+│   ├── registrasi_page.dart
+│   ├── produk_page.dart
+│   ├── produk_form.dart
+│   └── produk_detail.dart
+└── widget/
+    ├── success_dialog.dart
+    └── warning_dialog.dart
 ```
 
 ---
+
+## Implementasi Helpers
+
+### 1. user_info.dart
+
+Menangani penyimpanan dan pengambilan token serta user ID menggunakan SharedPreferences.
+
+```dart
+import 'package:shared_preferences/shared_preferences.dart';
+
+class UserInfo {
+  Future setToken(String value) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.setString("token", value);
+  }
+
+  Future<String?> getToken() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString("token");
+  }
+
+  Future setUserID(int value) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.setInt("userID", value);
+  }
+
+  Future<int?> getUserID() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getInt("userID");
+  }
+
+  Future logout() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
+  }
+}
+```
+
+**Fungsi:**
+- setToken() - Menyimpan token
+- getToken() - Mengambil token
+- setUserID() - Menyimpan user ID
+- getUserID() - Mengambil user ID
+- logout() - Menghapus semua data
+
+---
+
+### 2. app_exception.dart
+
+Mendefinisikan custom exception classes untuk error handling.
+
+```dart
+class AppException implements Exception {
+  final _message;
+  final _prefix;
+  AppException([this._message, this._prefix]);
+
+  @override
+  String toString() {
+    return "$_prefix$_message";
+  }
+}
+
+class FetchDataException extends AppException {
+  FetchDataException([String? message])
+      : super(message, "Error During Communication: ");
+}
+
+class BadRequestException extends AppException {
+  BadRequestException([message]) : super(message, "Invalid Request: ");
+}
+
+class UnauthorisedException extends AppException {
+  UnauthorisedException([message]) : super(message, "Unauthorised: ");
+}
+
+class UnprocessableEntityException extends AppException {
+  UnprocessableEntityException([message])
+      : super(message, "Unprocessable Entity: ");
+}
+
+class InvalidInputException extends AppException {
+  InvalidInputException([String? message]) : super(message, "Invalid Input: ");
+}
+```
+
+---
+
+### 3. api.dart
+
+Menangani semua HTTP request (GET, POST, PUT, DELETE) dengan Bearer Token.
+
+```dart
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:tokokita/helpers/user_info.dart';
+import 'app_exception.dart';
+
+class Api {
+  Future<dynamic> post(dynamic url, dynamic data) async {
+    var token = await UserInfo().getToken();
+    var responseJson;
+    try {
+      final response = await http.post(Uri.parse(url),
+          body: data,
+          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> get(dynamic url) async {
+    var token = await UserInfo().getToken();
+    var responseJson;
+    try {
+      final response = await http.get(Uri.parse(url),
+          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> put(dynamic url, dynamic data) async {
+    var token = await UserInfo().getToken();
+    var responseJson;
+    try {
+      final response = await http.put(Uri.parse(url), body: data, headers: {
+        HttpHeaders.authorizationHeader: "Bearer $token",
+        HttpHeaders.contentTypeHeader: "application/json"
+      });
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> delete(dynamic url) async {
+    var token = await UserInfo().getToken();
+    var responseJson;
+    try {
+      final response = await http.delete(Uri.parse(url),
+          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  dynamic _returnResponse(http.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        return response;
+      case 400:
+        throw BadRequestException(response.body.toString());
+      case 401:
+      case 403:
+        throw UnauthorisedException(response.body.toString());
+      case 422:
+        throw InvalidInputException(response.body.toString());
+      case 500:
+      default:
+        throw FetchDataException(
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+    }
+  }
+}
+```
+
+---
+
+### 4. api_url.dart
+
+Menyimpan semua URL endpoint API.
+
+```dart
+class ApiUrl {
+  static const String baseUrl = 'http://10.99.4.182:8080/tokokita/public';
+
+  static const String registrasi = baseUrl + '/registrasi';
+  static const String login = baseUrl + '/login';
+  static const String listProduk = baseUrl + '/produk';
+  static const String createProduk = baseUrl + '/produk';
+
+  static String updateProduk(int id) {
+    return baseUrl + '/produk/' + id.toString();
+  }
+
+  static String showProduk(int id) {
+    return baseUrl + '/produk/' + id.toString();
+  }
+
+  static String deleteProduk(int id) {
+    return baseUrl + '/produk/' + id.toString();
+  }
+}
+```
+
+Catatan: Ubah IP address sesuai dengan server lokal Anda.
+
+---
+
+## Implementasi Bloc
+
+### 1. registrasi_bloc.dart
+
+Menangani proses registrasi user.
+
+```dart
+import 'dart:convert';
+import 'package:tokokita/helpers/api.dart';
+import 'package:tokokita/helpers/api_url.dart';
+import 'package:tokokita/model/registrasi.dart';
+
+class RegistrasiBloc {
+  static Future<Registrasi> registrasi({
+    String? nama,
+    String? email,
+    String? password
+  }) async {
+    String apiUrl = ApiUrl.registrasi;
+    var body = {"nama": nama, "email": email, "password": password};
+    var response = await Api().post(apiUrl, body);
+    var jsonObj = json.decode(response.body);
+    return Registrasi.fromJson(jsonObj);
+  }
+}
+```
+
+---
+
+### 2. login_bloc.dart
+
+Menangani proses login user.
+
+```dart
+import 'dart:convert';
+import 'package:tokokita/helpers/api.dart';
+import 'package:tokokita/helpers/api_url.dart';
+import 'package:tokokita/model/login.dart';
+
+class LoginBloc {
+  static Future<Login> login({
+    String? email,
+    String? password
+  }) async {
+    String apiUrl = ApiUrl.login;
+    var body = {"email": email, "password": password};
+    var response = await Api().post(apiUrl, body);
+    var jsonObj = json.decode(response.body);
+    return Login.fromJson(jsonObj);
+  }
+}
+```
+
+---
+
+### 3. logout_bloc.dart
+
+Menangani proses logout user.
+
+```dart
+import 'package:tokokita/helpers/user_info.dart';
+
+class LogoutBloc {
+  static Future logout() async {
+    await UserInfo().logout();
+  }
+}
+```
+
+---
+
+### 4. produk_bloc.dart
+
+Menangani CRUD produk.
+
+```dart
+import 'dart:convert';
+import 'package:tokokita/helpers/api.dart';
+import 'package:tokokita/helpers/api_url.dart';
+import 'package:tokokita/model/produk.dart';
+
+class ProdukBloc {
+  static Future<List<Produk>> getProduks() async {
+    String apiUrl = ApiUrl.listProduk;
+    var response = await Api().get(apiUrl);
+    var jsonObj = json.decode(response.body);
+    List<dynamic> listProduk = (jsonObj as Map<String, dynamic>)['data'];
+    List<Produk> produks = [];
+    for (int i = 0; i < listProduk.length; i++) {
+      produks.add(Produk.fromJson(listProduk[i]));
+    }
+    return produks;
+  }
+
+  static Future addProduk({Produk? produk}) async {
+    String apiUrl = ApiUrl.createProduk;
+    var body = {
+      "kode_produk": produk!.kodeProduk,
+      "nama_produk": produk.namaProduk,
+      "harga": produk.hargaProduk.toString()
+    };
+    var response = await Api().post(apiUrl, body);
+    var jsonObj = json.decode(response.body);
+    return jsonObj['status'];
+  }
+
+  static Future updateProduk({required Produk produk}) async {
+    String apiUrl = ApiUrl.updateProduk(int.parse(produk.id!));
+    var body = {
+      "kode_produk": produk.kodeProduk,
+      "nama_produk": produk.namaProduk,
+      "harga": produk.hargaProduk.toString()
+    };
+    var response = await Api().put(apiUrl, jsonEncode(body));
+    var jsonObj = json.decode(response.body);
+    return jsonObj['status'];
+  }
+
+  static Future<bool> deleteProduk({int? id}) async {
+    String apiUrl = ApiUrl.deleteProduk(id!);
+    var response = await Api().delete(apiUrl);
+    var jsonObj = json.decode(response.body);
+    return (jsonObj as Map<String, dynamic>)['data'];
+  }
+}
+```
+
+---
+
+## Implementasi UI Pages
+
+### 1. login_page.dart
+
+Halaman login dengan form email dan password.
+
+Fitur:
+- Form input email dan password
+- Validasi email dan password
+- Loading state saat login
+- Link ke halaman registrasi
+- Auto-login jika token masih valid
+
+[SCREENSHOT LOGIN PAGE]
+
+---
+
+### 2. registrasi_page.dart
+
+Halaman registrasi dengan form lengkap.
+
+Fitur:
+- Form input nama, email, password, konfirmasi password
+- Validasi lengkap (minimal 3 karakter untuk nama, 6 untuk password)
+- Loading indicator saat registrasi
+- Success dialog yang navigate ke login page
+- Password visibility toggle
+
+[SCREENSHOT REGISTRASI PAGE]
+
+---
+
+### 3. produk_page.dart
+
+Halaman list produk dengan fitur CRUD.
+
+Fitur:
+- Menampilkan list produk dari API
+- FutureBuilder untuk loading state
+- Button tambah produk di AppBar
+- Logout di drawer
+- Item produk clickable untuk detail
+
+[SCREENSHOT PRODUCT LIST PAGE]
+
+---
+
+### 4. produk_form.dart
+
+Halaman form untuk tambah dan edit produk.
+
+Fitur:
+- Form input kode produk, nama, dan harga
+- Validasi input
+- Dynamic button (SIMPAN untuk tambah, UBAH untuk edit)
+- Loading state
+- Pre-fill data untuk edit mode
+
+[SCREENSHOT FORM TAMBAH PRODUK]
+
+[SCREENSHOT FORM EDIT PRODUK]
+
+---
+
+### 5. produk_detail.dart
+
+Halaman detail produk dengan edit dan delete.
+
+Fitur:
+- Menampilkan detail produk
+- Format harga dengan Rp
+- Button EDIT untuk buka form edit
+- Button HAPUS dengan confirmation dialog
+- Delete request ke API
+
+[SCREENSHOT PRODUCT DETAIL]
+
+[SCREENSHOT CONFIRM DELETE]
+
+---
+
+## Implementasi Widget Dialog
+
+### 1. success_dialog.dart
+
+Dialog untuk menampilkan pesan sukses.
+
+```dart
+import 'package:flutter/material.dart';
+
+class Consts {
+  Consts._();
+  static const double padding = 16.0;
+  static const double avatarRadius = 66.0;
+}
+
+class SuccessDialog extends StatelessWidget {
+  final String? description;
+  final VoidCallback? okClick;
+
+  const SuccessDialog({Key? key, this.description, this.okClick})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
+    );
+  }
+
+  dialogContent(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(top: 66.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10.0,
+            offset: Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.check_circle,
+              color: Colors.green,
+              size: 48,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "SUKSES",
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.green),
+          ),
+          const SizedBox(height: 12.0),
+          Text(
+            description!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 14.0, color: Colors.grey),
+          ),
+          const SizedBox(height: 24.0),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                okClick!();
+              },
+              child: const Text("OK"),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+```
+
+---
+
+### 2. warning_dialog.dart
+
+Dialog untuk menampilkan pesan error atau warning.
+
+```dart
+import 'package:flutter/material.dart';
+
+class Consts {
+  Consts._();
+  static const double padding = 16.0;
+  static const double avatarRadius = 66.0;
+}
+
+class WarningDialog extends StatelessWidget {
+  final String? description;
+  final VoidCallback? okClick;
+
+  const WarningDialog({Key? key, this.description, this.okClick})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
+    );
+  }
+
+  dialogContent(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(top: 66.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10.0,
+            offset: Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.red.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.cancel,
+              color: Colors.red,
+              size: 48,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "GAGAL",
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.red),
+          ),
+          const SizedBox(height: 12.0),
+          Text(
+            description!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 14.0, color: Colors.grey),
+          ),
+          const SizedBox(height: 24.0),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+```
+
+---
+
+## Cara Menjalankan
+
+### Setup Server CodeIgniter 4
+
+```bash
+cd project-ci4
+php spark serve --host 10.99.4.182 --port 8080
+```
+
+### Setup Flutter Application
+
+1. Update API URL di file `lib/helpers/api_url.dart`:
+   ```dart
+   static const String baseUrl = 'http://10.99.4.182:8080/tokokita/public';
+   ```
+
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+3. Run application:
+   
+   Web (Chrome):
+   ```bash
+   flutter run -d chrome --web-browser-flag "--disable-web-security"
+   ```
+   
+   Web (Edge):
+   ```bash
+   flutter run -d edge
+   ```
+   
+   Emulator/Device:
+   ```bash
+   flutter run
+   ```
+
+---
+
+## Testing
+
+### Test Login
+1. Buka aplikasi
+2. Masukkan email: admin@test.com
+3. Masukkan password: admin123
+4. Klik LOGIN
+5. Seharusnya navigate ke halaman Product List
+
+### Test Registrasi
+1. Klik "Registrasi"
+2. Isi form dengan data baru
+3. Klik DAFTAR
+4. Seharusnya muncul success dialog
+5. Klik OK untuk kembali ke login
+
+### Test CRUD Produk
+
+CREATE:
+1. Klik tombol Tambah di AppBar
+2. Isi form kode, nama, harga
+3. Klik SIMPAN
+4. Seharusnya kembali ke list produk
+
+READ:
+1. Lihat list produk di halaman utama
+2. Klik salah satu item
+
+UPDATE:
+1. Klik item untuk buka detail
+2. Klik EDIT
+3. Ubah data produk
+4. Klik UBAH
+5. Seharusnya kembali ke list dengan data terupdate
+
+DELETE:
+1. Klik item untuk buka detail
+2. Klik HAPUS
+3. Confirm dengan klik YA
+4. Seharusnya kembali ke list dan produk sudah dihapus
+
+---
+
+## Screenshot
+
+Halaman Login
+
+[SCREENSHOT LOGIN PAGE]
+
+Halaman Registrasi
+
+[SCREENSHOT REGISTRASI PAGE]
+
+Halaman List Produk
+
+[SCREENSHOT PRODUCT LIST PAGE]
+
+Halaman Tambah Produk
+
+[SCREENSHOT FORM TAMBAH PRODUK]
+
+Halaman Detail Produk
+
+[SCREENSHOT PRODUCT DETAIL]
+
+Halaman Edit Produk
+
+[SCREENSHOT FORM EDIT PRODUK]
+
+Dialog Konfirmasi Hapus
+
+[SCREENSHOT CONFIRM DELETE]
+
+Dialog Sukses
+
+[SCREENSHOT SUCCESS DIALOG]
+
+Dialog Error
+
+[SCREENSHOT ERROR DIALOG]
+
+---
+
+## Referensi
+
+1. A. Sasongko, M.S. Maulana & W. Nugraha. "Web Programming; Membangun Aplikasi Mobile Kolaborasi Antara Flutter dan Codeigniter". Graha Ilmu. 2019.
+
+2. https://flutter.dev/multi-platform/mobile
+
+3. https://developer.android.com/studio
+
+4. A. Sasongko, M.S. Maulana, & Latifah. "Presensi Karyawan Berbasis Aplikasi Mobile Dengan Filter Jaringan Intranet Dan Imei". Jurnal Sistemasi, vol. 9, no. 1, pp. 92-102, 2020.
+
+---
+
+Nama: Jeslan Surya Utama  
+Tanggal: 30 November 2025  
+Flutter SDK: 3.9.2+  
+Dart: 3.0+
 

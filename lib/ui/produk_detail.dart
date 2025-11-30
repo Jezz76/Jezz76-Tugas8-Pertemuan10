@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tokokita/bloc/produk_bloc.dart';
 import 'package:tokokita/model/produk.dart';
 import 'package:tokokita/ui/produk_form.dart';
+import 'package:tokokita/ui/produk_page.dart';
+import 'package:tokokita/widget/warning_dialog.dart';
 
 // ignore: must_be_immutable
 class ProdukDetail extends StatefulWidget {
@@ -16,69 +19,88 @@ class _ProdukDetailState extends State<ProdukDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Detail Produk - Jes'),
-        centerTitle: true,
+        title: const Text('Detail Produk'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              // Product Card
-              Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    children: [
-                      // Icon Produk
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          shape: BoxShape.circle,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.grey[50]!,
+              Colors.grey[100]!,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                // Product Card
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(28.0),
+                    child: Column(
+                      children: [
+                        // Icon Produk dengan background gradient
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                const Color(0xFF6366F1).withOpacity(0.1),
+                                const Color(0xFF8B5CF6).withOpacity(0.1),
+                              ],
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.shopping_bag,
+                            size: 80,
+                            color: Color(0xFF6366F1),
+                          ),
                         ),
-                        child: Icon(
-                          Icons.shopping_bag,
-                          size: 80,
-                          color: Theme.of(context).primaryColor,
+                        const SizedBox(height: 28),
+                        // Info Produk
+                        _buildInfoRow(
+                          icon: Icons.qr_code,
+                          label: 'Kode Produk',
+                          value: widget.produk!.kodeProduk!,
+                          color: const Color(0xFF6366F1),
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      // Info Produk
-                      _buildInfoRow(
-                        icon: Icons.qr_code,
-                        label: 'Kode Produk',
-                        value: widget.produk!.kodeProduk!,
-                        color: Colors.blue,
-                      ),
-                      const Divider(height: 32),
-                      _buildInfoRow(
-                        icon: Icons.inventory,
-                        label: 'Nama Produk',
-                        value: widget.produk!.namaProduk!,
-                        color: Colors.green,
-                      ),
-                      const Divider(height: 32),
-                      _buildInfoRow(
-                        icon: Icons.attach_money,
-                        label: 'Harga',
-                        value: 'Rp ${_formatCurrency(widget.produk!.hargaProduk)}',
-                        color: Colors.orange,
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                        const Divider(),
+                        const SizedBox(height: 20),
+                        _buildInfoRow(
+                          icon: Icons.inventory,
+                          label: 'Nama Produk',
+                          value: widget.produk!.namaProduk!,
+                          color: const Color(0xFF8B5CF6),
+                        ),
+                        const SizedBox(height: 20),
+                        const Divider(),
+                        const SizedBox(height: 20),
+                        _buildInfoRow(
+                          icon: Icons.attach_money,
+                          label: 'Harga',
+                          value: 'Rp ${_formatCurrency(widget.produk!.hargaProduk)}',
+                          color: Colors.orange[600]!,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              // Tombol Aksi
-              _tombolHapusEdit(),
-            ],
+                const SizedBox(height: 24),
+                // Tombol Aksi
+                _tombolHapusEdit(),
+              ],
+            ),
           ),
         ),
       ),
@@ -187,52 +209,35 @@ class _ProdukDetailState extends State<ProdukDetail> {
   }
 
   void confirmHapus() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: const [
-              Icon(Icons.warning, color: Colors.red, size: 28),
-              SizedBox(width: 12),
-              Text('Konfirmasi Hapus'),
-            ],
-          ),
-          content: const Text(
-            'Apakah Anda yakin ingin menghapus produk ini?',
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: [
-            // Tombol Batal
-            TextButton(
-              child: const Text('BATAL'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            // Tombol Hapus
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('HAPUS'),
-              onPressed: () {
-                // Simulasi hapus berhasil
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Produk berhasil dihapus!'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-                Navigator.pop(context); // Tutup dialog
-                Navigator.pop(context); // Kembali ke list
-              },
-            ),
-          ],
-        );
-      },
+    AlertDialog alertDialog = AlertDialog(
+      content: const Text("Yakin ingin menghapus data ini?"),
+      actions: [
+        //tombol hapus
+        OutlinedButton(
+          child: const Text("Ya"),
+          onPressed: () {
+            ProdukBloc.deleteProduk(id: int.parse(widget.produk!.id!)).then(
+                (value) => {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ProdukPage()))
+                }, onError: (error) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => const WarningDialog(
+                  description: "Hapus gagal, silahkan coba lagi",
+                ),
+              );
+            });
+          },
+        ),
+        //tombol batal
+        OutlinedButton(
+          child: const Text("Batal"),
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
     );
+
+    showDialog(builder: (context) => alertDialog, context: context);
   }
 }
