@@ -1,12 +1,28 @@
-# Aplikasi Toko Kita - CRUD Flutter dengan REST API
+# APLIKASI TOKO KITA - CRUD FLUTTER
 
-Nama: Jeskris Oktovianus Silahooy (H1D023003)
+Nama: Jeskris Oktovianus Silahooy  
+NIM: H1D023003  
+Shift: A->C
 
 ---
 
-## Dependencies
+## 1. PENGENALAN APLIKASI
 
-File: pubspec.yaml
+Aplikasi Toko Kita adalah aplikasi mobile berbasis Flutter yang menerapkan sistem CRUD (Create, Read, Update, Delete) untuk manajemen data produk. Aplikasi ini terintegrasi dengan REST API berbasis CodeIgniter 4 dan menggunakan arsitektur Bloc Pattern untuk business logic.
+
+Fitur Utama:
+- Registrasi user baru
+- Login dengan token authentication
+- Tambah produk (Create)
+- Lihat daftar produk (Read)
+- Edit produk (Update)
+- Hapus produk (Delete)
+
+---
+
+## 2. DEPENDENCIES
+
+pubspec.yaml
 
 ```yaml
 dependencies:
@@ -17,11 +33,13 @@ dependencies:
   shared_preferences: ^2.0.11
 ```
 
-Jalankan: `flutter pub get`
+Package yang digunakan:
+- http ^0.13.4 - Untuk HTTP request ke REST API
+- shared_preferences ^2.0.11 - Untuk menyimpan token di local storage
 
 ---
 
-## Struktur Project
+## 3. STRUKTUR PROJECT
 
 ```
 lib/
@@ -53,11 +71,11 @@ lib/
 
 ---
 
-## Implementasi Helpers
+## 4. IMPLEMENTASI HELPERS
 
-### 1. user_info.dart
+### A. user_info.dart
 
-Menangani penyimpanan dan pengambilan token serta user ID menggunakan SharedPreferences.
+Menangani penyimpanan dan pengambilan token dari SharedPreferences.
 
 ```dart
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,18 +108,14 @@ class UserInfo {
 }
 ```
 
-**Fungsi:**
-- setToken() - Menyimpan token
-- getToken() - Mengambil token
-- setUserID() - Menyimpan user ID
-- getUserID() - Mengambil user ID
-- logout() - Menghapus semua data
+Fungsi:
+- setToken() - Simpan token setelah login berhasil
+- getToken() - Ambil token untuk setiap request ke API
+- logout() - Hapus semua data saat logout
 
----
+### B. app_exception.dart
 
-### 2. app_exception.dart
-
-Mendefinisikan custom exception classes untuk error handling.
+Custom exception untuk error handling.
 
 ```dart
 class AppException implements Exception {
@@ -128,21 +142,14 @@ class UnauthorisedException extends AppException {
   UnauthorisedException([message]) : super(message, "Unauthorised: ");
 }
 
-class UnprocessableEntityException extends AppException {
-  UnprocessableEntityException([message])
-      : super(message, "Unprocessable Entity: ");
-}
-
 class InvalidInputException extends AppException {
   InvalidInputException([String? message]) : super(message, "Invalid Input: ");
 }
 ```
 
----
+### C. api.dart
 
-### 3. api.dart
-
-Menangani semua HTTP request (GET, POST, PUT, DELETE) dengan Bearer Token.
+Menangani semua HTTP request dengan Bearer Token.
 
 ```dart
 import 'dart:io';
@@ -226,11 +233,9 @@ class Api {
 }
 ```
 
----
+### D. api_url.dart
 
-### 4. api_url.dart
-
-Menyimpan semua URL endpoint API.
+Menyimpan endpoint API.
 
 ```dart
 class ApiUrl {
@@ -255,15 +260,11 @@ class ApiUrl {
 }
 ```
 
-Catatan: Ubah IP address sesuai dengan server lokal Anda.
-
 ---
 
-## Implementasi Bloc
+## 5. IMPLEMENTASI BLOC
 
-### 1. registrasi_bloc.dart
-
-Menangani proses registrasi user.
+### A. registrasi_bloc.dart
 
 ```dart
 import 'dart:convert';
@@ -286,11 +287,7 @@ class RegistrasiBloc {
 }
 ```
 
----
-
-### 2. login_bloc.dart
-
-Menangani proses login user.
+### B. login_bloc.dart
 
 ```dart
 import 'dart:convert';
@@ -312,11 +309,7 @@ class LoginBloc {
 }
 ```
 
----
-
-### 3. logout_bloc.dart
-
-Menangani proses logout user.
+### C. logout_bloc.dart
 
 ```dart
 import 'package:tokokita/helpers/user_info.dart';
@@ -328,11 +321,7 @@ class LogoutBloc {
 }
 ```
 
----
-
-### 4. produk_bloc.dart
-
-Menangani CRUD produk.
+### D. produk_bloc.dart
 
 ```dart
 import 'dart:convert';
@@ -388,102 +377,157 @@ class ProdukBloc {
 
 ---
 
-## Implementasi UI Pages
+## 6. PROSES LOGIN
 
-### 1. login_page.dart
+### Step 1: Halaman Login (login_page.dart)
 
-Halaman login dengan form email dan password.
+Screenshot Halaman Login:
 
-Fitur:
-- Form input email dan password
-- Validasi email dan password
-- Loading state saat login
-- Link ke halaman registrasi
-- Auto-login jika token masih valid
+[INSERT SCREENSHOT: Form login dengan field email dan password]
 
-[SCREENSHOT LOGIN PAGE]
+Penjelasan: Halaman login menampilkan form dengan gradient background indigo-purple, input field email dan password, serta button LOGIN.
 
----
-
-### 2. registrasi_page.dart
-
-Halaman registrasi dengan form lengkap.
-
-Fitur:
-- Form input nama, email, password, konfirmasi password
-- Validasi lengkap (minimal 3 karakter untuk nama, 6 untuk password)
-- Loading indicator saat registrasi
-- Success dialog yang navigate ke login page
-- Password visibility toggle
-
-[SCREENSHOT REGISTRASI PAGE]
-
----
-
-### 3. produk_page.dart
-
-Halaman list produk dengan fitur CRUD.
-
-Fitur:
-- Menampilkan list produk dari API
-- FutureBuilder untuk loading state
-- Button tambah produk di AppBar
-- Logout di drawer
-- Item produk clickable untuk detail
-
-[SCREENSHOT PRODUCT LIST PAGE]
-
----
-
-### 4. produk_form.dart
-
-Halaman form untuk tambah dan edit produk.
-
-Fitur:
-- Form input kode produk, nama, dan harga
-- Validasi input
-- Dynamic button (SIMPAN untuk tambah, UBAH untuk edit)
-- Loading state
-- Pre-fill data untuk edit mode
-
-[SCREENSHOT FORM TAMBAH PRODUK]
-
-[SCREENSHOT FORM EDIT PRODUK]
-
----
-
-### 5. produk_detail.dart
-
-Halaman detail produk dengan edit dan delete.
-
-Fitur:
-- Menampilkan detail produk
-- Format harga dengan Rp
-- Button EDIT untuk buka form edit
-- Button HAPUS dengan confirmation dialog
-- Delete request ke API
-
-[SCREENSHOT PRODUCT DETAIL]
-
-[SCREENSHOT CONFIRM DELETE]
-
----
-
-## Implementasi Widget Dialog
-
-### 1. success_dialog.dart
-
-Dialog untuk menampilkan pesan sukses.
+Kode Form Login:
 
 ```dart
-import 'package:flutter/material.dart';
-
-class Consts {
-  Consts._();
-  static const double padding = 16.0;
-  static const double avatarRadius = 66.0;
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Card(
+            elevation: 12,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            margin: EdgeInsets.all(16),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("LOGIN", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: _submit,
+                    child: isLoading 
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text("LOGIN"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
+```
 
+### Step 2: Input Email dan Password
+
+a. User memasukkan email: admin@test.com
+
+[INSERT SCREENSHOT: Field email sudah terisi]
+
+Penjelasan: User mengetik email di field email. Email disimpan di emailController.
+
+b. User memasukkan password: admin123
+
+[INSERT SCREENSHOT: Field password terisi (dots)]
+
+Penjelasan: User mengetik password. Field password menggunakan obscureText: true sehingga karakter tidak terlihat, hanya dot.
+
+### Step 3: Klik Button LOGIN
+
+Kode Proses Login (_submit function):
+
+```dart
+void _submit() async {
+  if (!_formKey.currentState!.validate()) {
+    return;
+  }
+
+  setState(() {
+    isLoading = true;
+  });
+
+  try {
+    var login = await LoginBloc.login(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    await UserInfo().setToken(login.token ?? '');
+    await UserInfo().setUserID(login.userID ?? 0);
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => ProdukPage()),
+    );
+  } catch (e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return WarningDialog(
+          description: e.toString(),
+        );
+      },
+    );
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+```
+
+Penjelasan:
+1. Form di-validate dulu
+2. Set isLoading = true untuk menampilkan loading spinner
+3. Panggil LoginBloc.login() dengan email dan password
+4. Server return token dan userID
+5. Simpan token dan userID ke SharedPreferences
+6. Navigate ke ProdukPage dengan pushReplacement
+
+### Step 4: Loading Process
+
+[INSERT SCREENSHOT: Button LOGIN menampilkan loading spinner]
+
+Penjelasan: Saat button ditekan, button menampilkan CircularProgressIndicator (loading spinner) sambil menunggu respons dari server.
+
+### Step 5: Login Berhasil
+
+[INSERT SCREENSHOT: Popup/Dialog sukses login]
+
+Kode Success Dialog (success_dialog.dart):
+
+```dart
 class SuccessDialog extends StatelessWidget {
   final String? description;
   final VoidCallback? okClick;
@@ -495,332 +539,725 @@ class SuccessDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      child: dialogContent(context),
-    );
-  }
-
-  dialogContent(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.only(top: 66.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10.0,
-            offset: Offset(0.0, 10.0),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
-              shape: BoxShape.circle,
+      child: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.green,
+                size: 48,
+              ),
             ),
-            child: const Icon(
-              Icons.check_circle,
-              color: Colors.green,
-              size: 48,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            "SUKSES",
-            style: TextStyle(
-                fontSize: 20.0,
+            SizedBox(height: 16),
+            Text(
+              "SUKSES",
+              style: TextStyle(
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.green),
-          ),
-          const SizedBox(height: 12.0),
-          Text(
-            description!,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14.0, color: Colors.grey),
-          ),
-          const SizedBox(height: 24.0),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: ElevatedButton(
+                color: Colors.green,
+              ),
+            ),
+            SizedBox(height: 12),
+            Text(
+              description ?? "Login berhasil!",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                okClick!();
+                okClick?.call();
               },
-              child: const Text("OK"),
-            ),
-          )
-        ],
+              child: Text("OK"),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 ```
 
+Penjelasan: Setelah login berhasil, dialog sukses muncul dengan icon checkmark hijau dan text SUKSES. User klik OK untuk lanjut.
+
+### Step 6: Navigate ke Halaman Produk
+
+[INSERT SCREENSHOT: Halaman Daftar Produk]
+
+Penjelasan: Setelah klik OK, navigate ke ProdukPage menggunakan pushReplacement. Halaman login ditutup dan halaman produk ditampilkan.
+
 ---
 
-### 2. warning_dialog.dart
+## 7. PROSES REGISTRASI
 
-Dialog untuk menampilkan pesan error atau warning.
+### Step 1: Klik Link Registrasi
+
+[INSERT SCREENSHOT: Link "Belum punya akun? Registrasi"]
+
+Penjelasan: Di halaman login, ada text "Belum punya akun? Registrasi di sini". User klik link ini.
+
+### Step 2: Halaman Registrasi Terbuka
+
+[INSERT SCREENSHOT: Form registrasi dengan 4 field]
+
+Kode Form Registrasi:
 
 ```dart
-import 'package:flutter/material.dart';
+Form(
+  key: _formKey,
+  child: Column(
+    children: [
+      TextFormField(
+        controller: namaController,
+        decoration: InputDecoration(labelText: "Nama (minimal 3 karakter)"),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Nama tidak boleh kosong";
+          }
+          if (value.length < 3) {
+            return "Nama minimal 3 karakter";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 16),
+      TextFormField(
+        controller: emailController,
+        decoration: InputDecoration(labelText: "Email"),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Email tidak boleh kosong";
+          }
+          if (!value.contains("@")) {
+            return "Email tidak valid";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 16),
+      TextFormField(
+        controller: passwordController,
+        obscureText: !_passwordVisible,
+        decoration: InputDecoration(
+          labelText: "Password (minimal 6 karakter)",
+          suffixIcon: IconButton(
+            icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
+            onPressed: () {
+              setState(() => _passwordVisible = !_passwordVisible);
+            },
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Password tidak boleh kosong";
+          }
+          if (value.length < 6) {
+            return "Password minimal 6 karakter";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 16),
+      TextFormField(
+        controller: confirmPasswordController,
+        obscureText: true,
+        decoration: InputDecoration(labelText: "Konfirmasi Password"),
+        validator: (value) {
+          if (value != passwordController.text) {
+            return "Password tidak sama";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 24),
+      ElevatedButton(
+        onPressed: _submit,
+        child: isLoading 
+            ? CircularProgressIndicator(color: Colors.white)
+            : Text("DAFTAR"),
+      ),
+    ],
+  ),
+)
+```
 
-class Consts {
-  Consts._();
-  static const double padding = 16.0;
-  static const double avatarRadius = 66.0;
-}
+Penjelasan Form:
+- Nama: validasi minimal 3 karakter
+- Email: validasi harus ada @
+- Password: validasi minimal 6 karakter, ada toggle show/hide
+- Konfirmasi Password: harus sama dengan password
 
-class WarningDialog extends StatelessWidget {
-  final String? description;
-  final VoidCallback? okClick;
+### Step 3: Isi Form Registrasi
 
-  const WarningDialog({Key? key, this.description, this.okClick})
-      : super(key: key);
+[INSERT SCREENSHOT: Form sudah terisi semua]
 
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      child: dialogContent(context),
-    );
+Contoh data:
+- Nama: Test User
+- Email: testuser@test.com
+- Password: 123456
+- Konfirmasi: 123456
+
+### Step 4: Klik Button DAFTAR
+
+Kode Proses Registrasi:
+
+```dart
+void _submit() async {
+  if (!_formKey.currentState!.validate()) {
+    return;
   }
 
-  dialogContent(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.only(top: 66.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10.0,
-            offset: Offset(0.0, 10.0),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.cancel,
-              color: Colors.red,
-              size: 48,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            "GAGAL",
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.red),
-          ),
-          const SizedBox(height: 12.0),
-          Text(
-            description!,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14.0, color: Colors.grey),
-          ),
-          const SizedBox(height: 24.0),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+  setState(() {
+    isLoading = true;
+  });
+
+  try {
+    var registrasi = await RegistrasiBloc.registrasi(
+      nama: namaController.text,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SuccessDialog(
+          description: "Registrasi berhasil! Silakan login.",
+          okClick: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+        );
+      },
+    );
+  } catch (e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return WarningDialog(
+          description: e.toString(),
+        );
+      },
+    );
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+```
+
+Penjelasan:
+1. Validate form
+2. Set isLoading = true
+3. Panggil RegistrasiBloc.registrasi() dengan nama, email, password
+4. Jika berhasil, tampilkan SuccessDialog
+5. Klik OK, navigate ke LoginPage
+6. Jika gagal, tampilkan WarningDialog dengan error message
+
+### Step 5: Loading Process
+
+[INSERT SCREENSHOT: Button DAFTAR dengan loading spinner]
+
+### Step 6: Registrasi Berhasil
+
+[INSERT SCREENSHOT: SuccessDialog "Registrasi Berhasil"]
+
+### Step 7: Navigate ke Login
+
+[INSERT SCREENSHOT: Halaman Login]
+
+Penjelasan: Setelah klik OK di success dialog, navigate ke LoginPage. User bisa login dengan akun yang baru didaftar.
+
+---
+
+## 8. PROSES CRUD PRODUK
+
+### A. READ - Lihat Daftar Produk
+
+#### Screenshot Halaman Produk List
+
+[INSERT SCREENSHOT: Daftar produk dengan beberapa item]
+
+Penjelasan: Halaman menampilkan list produk dari API. Setiap item menampilkan kode produk, nama, dan harga.
+
+Kode FutureBuilder:
+
+```dart
+FutureBuilder<List<Produk>>(
+  future: ProdukBloc.getProduks(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(child: CircularProgressIndicator());
+    } else if (snapshot.hasError) {
+      return Center(child: Text("Error: ${snapshot.error}"));
+    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+      return Center(child: Text("Tidak ada produk"));
+    } else {
+      return ListView.builder(
+        itemCount: snapshot.data!.length,
+        itemBuilder: (context, index) {
+          Produk produk = snapshot.data![index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProdukDetail(produk: produk),
+                ),
+              );
+            },
+            child: Card(
+              elevation: 4,
+              margin: EdgeInsets.all(8),
+              child: ListTile(
+                title: Text(produk.namaProduk ?? ""),
+                subtitle: Text("Rp ${produk.hargaProduk}"),
+                leading: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF6366F1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.shopping_bag, color: Colors.white),
+                ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
             ),
-          )
-        ],
+          );
+        },
+      );
+    }
+  },
+)
+```
+
+Penjelasan:
+- FutureBuilder memanggil ProdukBloc.getProduks()
+- Jika loading, tampilkan loading spinner
+- Jika ada error, tampilkan error message
+- Jika ada data, tampilkan ListView dari daftar produk
+- Setiap item clickable untuk buka detail produk
+
+### B. CREATE - Tambah Produk
+
+#### Step 1: Klik Button "Tambah Produk"
+
+[INSERT SCREENSHOT: Button di AppBar dengan text "Tambah Produk"]
+
+Penjelasan: Di AppBar halaman produk list, ada button "Tambah Produk". User klik button ini untuk navigate ke form tambah produk.
+
+Kode Button:
+
+```dart
+AppBar(
+  title: Text("Daftar Produk"),
+  actions: [
+    ElevatedButton.icon(
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProdukForm(),
+          ),
+        );
+      },
+      icon: Icon(Icons.add),
+      label: Text("Tambah"),
+    ),
+  ],
+)
+```
+
+#### Step 2: Halaman Form Tambah Produk
+
+[INSERT SCREENSHOT: Form dengan 3 field (kode, nama, harga)]
+
+Penjelasan: Form menampilkan 3 field input: kode produk, nama produk, dan harga.
+
+Kode Form Tambah:
+
+```dart
+Form(
+  key: _formKey,
+  child: Column(
+    children: [
+      TextFormField(
+        controller: kodeController,
+        decoration: InputDecoration(labelText: "Kode Produk"),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Kode tidak boleh kosong";
+          }
+          return null;
+        },
       ),
+      SizedBox(height: 16),
+      TextFormField(
+        controller: namaController,
+        decoration: InputDecoration(labelText: "Nama Produk"),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Nama tidak boleh kosong";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 16),
+      TextFormField(
+        controller: hargaController,
+        decoration: InputDecoration(labelText: "Harga"),
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Harga tidak boleh kosong";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 24),
+      ElevatedButton(
+        onPressed: _submit,
+        child: isLoading 
+            ? CircularProgressIndicator(color: Colors.white)
+            : Text("SIMPAN"),
+      ),
+    ],
+  ),
+)
+```
+
+#### Step 3: Isi Form
+
+[INSERT SCREENSHOT: Form sudah terisi dengan data produk baru]
+
+Contoh data:
+- Kode: PROD001
+- Nama: Laptop ASUS
+- Harga: 5000000
+
+#### Step 4: Klik Button SIMPAN
+
+Kode Proses Tambah Produk:
+
+```dart
+void _submit() async {
+  if (!_formKey.currentState!.validate()) {
+    return;
+  }
+
+  setState(() {
+    isLoading = true;
+  });
+
+  try {
+    Produk produk = Produk(
+      kodeProduk: kodeController.text,
+      namaProduk: namaController.text,
+      hargaProduk: int.parse(hargaController.text),
     );
+
+    await ProdukBloc.addProduk(produk: produk);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SuccessDialog(
+          description: "Produk berhasil ditambahkan!",
+          okClick: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  } catch (e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return WarningDialog(
+          description: e.toString(),
+        );
+      },
+    );
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
   }
 }
 ```
 
----
+Penjelasan:
+1. Validate form
+2. Buat object Produk dari input form
+3. Panggil ProdukBloc.addProduk() dengan object Produk
+4. Jika berhasil, tampilkan SuccessDialog
+5. Klik OK, pop dialog dan pop page, kembali ke list produk
+6. Data baru sudah ada di list
 
-## Cara Menjalankan
+#### Step 5: Loading
 
-### Setup Server CodeIgniter 4
+[INSERT SCREENSHOT: Button SIMPAN dengan loading spinner]
 
-```bash
-cd project-ci4
-php spark serve --host 10.99.4.182 --port 8080
+#### Step 6: Sukses Tambah
+
+[INSERT SCREENSHOT: SuccessDialog "Produk berhasil ditambahkan"]
+
+#### Step 7: Kembali ke List
+
+[INSERT SCREENSHOT: Halaman list produk dengan item baru]
+
+Penjelasan: Setelah klik OK di success dialog, navigate back ke halaman list. Produk baru sudah tampil di list.
+
+### C. UPDATE - Edit Produk
+
+#### Step 1: Buka Halaman Detail Produk
+
+[INSERT SCREENSHOT: Halaman detail produk dengan button EDIT]
+
+Penjelasan: Dari list produk, user klik item produk untuk membuka detail. Di halaman detail, ada button EDIT.
+
+#### Step 2: Klik Button EDIT
+
+Kode Button EDIT:
+
+```dart
+ElevatedButton(
+  onPressed: () {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ProdukForm(produk: widget.produk),
+      ),
+    );
+  },
+  child: Text("EDIT"),
+)
 ```
 
-### Setup Flutter Application
+#### Step 3: Halaman Form Edit
 
-1. Update API URL di file `lib/helpers/api_url.dart`:
-   ```dart
-   static const String baseUrl = 'http://10.99.4.182:8080/tokokita/public';
-   ```
+[INSERT SCREENSHOT: Form sudah pre-filled dengan data produk lama]
 
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
+Penjelasan: Form menampilkan data produk yang lama (sudah terisi). User bisa ubah data.
 
-3. Run application:
-   
-   Web (Chrome):
-   ```bash
-   flutter run -d chrome --web-browser-flag "--disable-web-security"
-   ```
-   
-   Web (Edge):
-   ```bash
-   flutter run -d edge
-   ```
-   
-   Emulator/Device:
-   ```bash
-   flutter run
-   ```
+Kode Form Edit (pre-fill):
 
----
+```dart
+@override
+void initState() {
+  super.initState();
+  if (widget.produk != null) {
+    kodeController.text = widget.produk!.kodeProduk ?? "";
+    namaController.text = widget.produk!.namaProduk ?? "";
+    hargaController.text = widget.produk!.hargaProduk.toString();
+    isEdit = true;
+  }
+}
+```
 
-## Testing
+#### Step 4: Ubah Data
 
-### Test Login
-1. Buka aplikasi
-2. Masukkan email: admin@test.com
-3. Masukkan password: admin123
-4. Klik LOGIN
-5. Seharusnya navigate ke halaman Product List
+[INSERT SCREENSHOT: Form dengan data yang sudah diubah]
 
-### Test Registrasi
-1. Klik "Registrasi"
-2. Isi form dengan data baru
-3. Klik DAFTAR
-4. Seharusnya muncul success dialog
-5. Klik OK untuk kembali ke login
+Contoh perubahan:
+- Harga dari 5000000 menjadi 4800000
 
-### Test CRUD Produk
+#### Step 5: Klik Button UBAH
 
-CREATE:
-1. Klik tombol Tambah di AppBar
-2. Isi form kode, nama, harga
-3. Klik SIMPAN
-4. Seharusnya kembali ke list produk
+Kode Proses Edit Produk:
 
-READ:
-1. Lihat list produk di halaman utama
-2. Klik salah satu item
+```dart
+void _submit() async {
+  if (!_formKey.currentState!.validate()) {
+    return;
+  }
 
-UPDATE:
-1. Klik item untuk buka detail
-2. Klik EDIT
-3. Ubah data produk
-4. Klik UBAH
-5. Seharusnya kembali ke list dengan data terupdate
+  setState(() {
+    isLoading = true;
+  });
 
-DELETE:
-1. Klik item untuk buka detail
-2. Klik HAPUS
-3. Confirm dengan klik YA
-4. Seharusnya kembali ke list dan produk sudah dihapus
+  try {
+    Produk produk = Produk(
+      id: widget.produk!.id,
+      kodeProduk: kodeController.text,
+      namaProduk: namaController.text,
+      hargaProduk: int.parse(hargaController.text),
+    );
 
----
+    await ProdukBloc.updateProduk(produk: produk);
 
-## Screenshot
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SuccessDialog(
+          description: "Produk berhasil diubah!",
+          okClick: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  } catch (e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return WarningDialog(
+          description: e.toString(),
+        );
+      },
+    );
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+```
 
-### Halaman Login
+Penjelasan:
+1. Validate form
+2. Buat object Produk dengan ID yang sama (untuk identify produk mana yang di-edit)
+3. Panggil ProdukBloc.updateProduk()
+4. Jika berhasil, tampilkan SuccessDialog
+5. Klik OK, pop 3 layer (dialog, form, detail) untuk kembali ke list
+6. Data di list sudah ter-update
 
-Menampilkan form login dengan email dan password.
+#### Step 6: Loading
 
-![Login Page]
+[INSERT SCREENSHOT: Button UBAH dengan loading spinner]
 
----
+#### Step 7: Sukses Edit
 
-### Halaman Registrasi
+[INSERT SCREENSHOT: SuccessDialog "Produk berhasil diubah"]
 
-Form registrasi untuk membuat akun baru dengan validasi lengkap.
+#### Step 8: Lihat Hasil Update
 
-![Registrasi Page]
+[INSERT SCREENSHOT: List produk dengan harga yang sudah berubah]
 
----
+### D. DELETE - Hapus Produk
 
-### Halaman List Produk
+#### Step 1: Buka Halaman Detail Produk
 
-Menampilkan daftar semua produk dengan tombol tambah di AppBar.
+[INSERT SCREENSHOT: Halaman detail dengan button HAPUS]
 
-![Product List Page]
+#### Step 2: Klik Button HAPUS
 
----
+Kode Button HAPUS:
 
-### Halaman Tambah Produk
+```dart
+ElevatedButton(
+  onPressed: _showDeleteDialog,
+  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+  child: Text("HAPUS"),
+)
+```
 
-Form untuk menambah produk baru dengan input kode, nama, dan harga.
+#### Step 3: Confirmation Dialog
 
-![Form Tambah Produk]
+[INSERT SCREENSHOT: Dialog konfirmasi "Yakin ingin menghapus?"]
 
----
+Kode Confirmation Dialog:
 
-### Halaman Detail Produk
+```dart
+void _showDeleteDialog() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Konfirmasi"),
+        content: Text("Yakin ingin menghapus produk ini?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("TIDAK"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _deleteProduk();
+            },
+            child: Text("YA"),
+          ),
+        ],
+      );
+    },
+  );
+}
+```
 
-Menampilkan detail lengkap produk dengan tombol edit dan hapus.
+#### Step 4: Klik YA untuk Confirm
 
-![Product Detail]
+[INSERT SCREENSHOT: Dialog hilang, loading spinner]
 
----
+#### Step 5: Proses Hapus
 
-### Halaman Edit Produk
+Kode Proses Delete:
 
-Form untuk mengubah data produk yang sudah ada.
+```dart
+void _deleteProduk() async {
+  try {
+    setState(() {
+      isLoading = true;
+    });
 
-![Form Edit Produk]
+    await ProdukBloc.deleteProduk(id: int.parse(widget.produk.id!));
 
----
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SuccessDialog(
+          description: "Produk berhasil dihapus!",
+          okClick: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  } catch (e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return WarningDialog(
+          description: e.toString(),
+        );
+      },
+    );
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+```
 
-### Dialog Konfirmasi Hapus
+Penjelasan:
+1. Kirim DELETE request ke API dengan produk ID
+2. Jika berhasil, tampilkan SuccessDialog
+3. Klik OK, pop 3 layer untuk kembali ke list
+4. Produk sudah hilang dari list
 
-Dialog konfirmasi sebelum menghapus produk.
+#### Step 6: Sukses Hapus
 
-![Confirm Delete Dialog]
+[INSERT SCREENSHOT: SuccessDialog "Produk berhasil dihapus"]
 
----
+#### Step 7: List Ter-update
 
-### Dialog Sukses
-
-Dialog yang tampil setelah operasi berhasil dilakukan.
-
-![Success Dialog]
-
----
-
-### Dialog Error
-
-Dialog yang tampil ketika terjadi kesalahan.
-
-![Error Dialog]
+[INSERT SCREENSHOT: List produk tanpa item yang dihapus]
 
 ---
