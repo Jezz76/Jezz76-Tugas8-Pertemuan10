@@ -383,7 +383,7 @@ class ProdukBloc {
 
 Screenshot Halaman Login:
 
-[INSERT SCREENSHOT: Form login dengan field email dan password]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (25)" src="https://github.com/user-attachments/assets/38b475f7-71d3-4164-a8b4-a53ddffdddb1" />
 
 Penjelasan: Halaman login menampilkan form dengan gradient background indigo-purple, input field email dan password, serta button LOGIN.
 
@@ -452,15 +452,15 @@ Widget build(BuildContext context) {
 
 ### Step 2: Input Email dan Password
 
-a. User memasukkan email: admin@test.com
+a. User memasukkan email: jes@gmail.com
 
-[INSERT SCREENSHOT: Field email sudah terisi]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (25)" src="https://github.com/user-attachments/assets/34fe20ae-27c8-4dc6-944d-0bc231f6a4ab" />
 
 Penjelasan: User mengetik email di field email. Email disimpan di emailController.
 
-b. User memasukkan password: admin123
+b. User memasukkan password: jes123
 
-[INSERT SCREENSHOT: Field password terisi (dots)]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (25)" src="https://github.com/user-attachments/assets/4c60db94-144a-42db-b86d-ab527f63945b" />
 
 Penjelasan: User mengetik password. Field password menggunakan obscureText: true sehingga karakter tidak terlihat, hanya dot.
 
@@ -515,86 +515,10 @@ Penjelasan:
 5. Simpan token dan userID ke SharedPreferences
 6. Navigate ke ProdukPage dengan pushReplacement
 
-### Step 4: Loading Process
 
-[INSERT SCREENSHOT: Button LOGIN menampilkan loading spinner]
+### Step 4: Navigate ke Halaman Produk
 
-Penjelasan: Saat button ditekan, button menampilkan CircularProgressIndicator (loading spinner) sambil menunggu respons dari server.
-
-### Step 5: Login Berhasil
-
-[INSERT SCREENSHOT: Popup/Dialog sukses login]
-
-Kode Success Dialog (success_dialog.dart):
-
-```dart
-class SuccessDialog extends StatelessWidget {
-  final String? description;
-  final VoidCallback? okClick;
-
-  const SuccessDialog({Key? key, this.description, this.okClick})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.check_circle,
-                color: Colors.green,
-                size: 48,
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              "SUKSES",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
-            ),
-            SizedBox(height: 12),
-            Text(
-              description ?? "Login berhasil!",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            SizedBox(height: 24),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                okClick?.call();
-              },
-              child: Text("OK"),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-```
-
-Penjelasan: Setelah login berhasil, dialog sukses muncul dengan icon checkmark hijau dan text SUKSES. User klik OK untuk lanjut.
-
-### Step 6: Navigate ke Halaman Produk
-
-[INSERT SCREENSHOT: Halaman Daftar Produk]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (26)" src="https://github.com/user-attachments/assets/5d58ec96-ccf2-4b22-809c-83522b2fed1f" />
 
 Penjelasan: Setelah klik OK, navigate ke ProdukPage menggunakan pushReplacement. Halaman login ditutup dan halaman produk ditampilkan.
 
@@ -604,13 +528,13 @@ Penjelasan: Setelah klik OK, navigate ke ProdukPage menggunakan pushReplacement.
 
 ### Step 1: Klik Link Registrasi
 
-[INSERT SCREENSHOT: Link "Belum punya akun? Registrasi"]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (25)" src="https://github.com/user-attachments/assets/81bb1efa-d8cd-4d21-bf7d-b33734f4edfb" />
 
 Penjelasan: Di halaman login, ada text "Belum punya akun? Registrasi di sini". User klik link ini.
 
 ### Step 2: Halaman Registrasi Terbuka
 
-[INSERT SCREENSHOT: Form registrasi dengan 4 field]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (23)" src="https://github.com/user-attachments/assets/41d918d3-3e0a-4738-918f-8895c62f64b6" />
 
 Kode Form Registrasi:
 
@@ -701,13 +625,13 @@ Penjelasan Form:
 
 ### Step 3: Isi Form Registrasi
 
-[INSERT SCREENSHOT: Form sudah terisi semua]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (23)" src="https://github.com/user-attachments/assets/4689b2fb-3330-4977-933a-3a7a3d90fd25" />
 
 Contoh data:
-- Nama: Test User
-- Email: testuser@test.com
-- Password: 123456
-- Konfirmasi: 123456
+- Nama: jes
+- Email: jes@gmail.com
+- Password: jes123
+- Konfirmasi: jes123
 
 ### Step 4: Klik Button DAFTAR
 
@@ -768,17 +692,13 @@ Penjelasan:
 5. Klik OK, navigate ke LoginPage
 6. Jika gagal, tampilkan WarningDialog dengan error message
 
-### Step 5: Loading Process
+### Step 5: Registrasi Berhasil
 
-[INSERT SCREENSHOT: Button DAFTAR dengan loading spinner]
-
-### Step 6: Registrasi Berhasil
-
-[INSERT SCREENSHOT: SuccessDialog "Registrasi Berhasil"]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (24)" src="https://github.com/user-attachments/assets/6cbde625-0176-4642-92ad-9973f9d0302a" />
 
 ### Step 7: Navigate ke Login
 
-[INSERT SCREENSHOT: Halaman Login]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (25)" src="https://github.com/user-attachments/assets/0eb38e4e-ad29-47ec-a293-2d3d39517fe4" />
 
 Penjelasan: Setelah klik OK di success dialog, navigate ke LoginPage. User bisa login dengan akun yang baru didaftar.
 
@@ -790,7 +710,7 @@ Penjelasan: Setelah klik OK di success dialog, navigate ke LoginPage. User bisa 
 
 #### Screenshot Halaman Produk List
 
-[INSERT SCREENSHOT: Daftar produk dengan beberapa item]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (26)" src="https://github.com/user-attachments/assets/53dccdab-898b-478a-82e8-ad27ebd09ce3" />
 
 Penjelasan: Halaman menampilkan list produk dari API. Setiap item menampilkan kode produk, nama, dan harga.
 
@@ -855,7 +775,7 @@ Penjelasan:
 
 #### Step 1: Klik Button "Tambah Produk"
 
-[INSERT SCREENSHOT: Button di AppBar dengan text "Tambah Produk"]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (27)" src="https://github.com/user-attachments/assets/216cfebe-dde0-4d68-a76a-edb0de4e2284" />
 
 Penjelasan: Di AppBar halaman produk list, ada button "Tambah Produk". User klik button ini untuk navigate ke form tambah produk.
 
@@ -882,7 +802,7 @@ AppBar(
 
 #### Step 2: Halaman Form Tambah Produk
 
-[INSERT SCREENSHOT: Form dengan 3 field (kode, nama, harga)]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (28)" src="https://github.com/user-attachments/assets/6a2c3b59-f716-445f-a7e9-ce88db89be37" />
 
 Penjelasan: Form menampilkan 3 field input: kode produk, nama produk, dan harga.
 
@@ -940,12 +860,12 @@ Form(
 
 #### Step 3: Isi Form
 
-[INSERT SCREENSHOT: Form sudah terisi dengan data produk baru]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (28)" src="https://github.com/user-attachments/assets/d60241ca-a5c0-4cde-b761-0c09463eea70" />
 
 Contoh data:
-- Kode: PROD001
-- Nama: Laptop ASUS
-- Harga: 5000000
+- Kode: JKW001
+- Nama: Mobil EsEMKA
+- Harga: 20000000
 
 #### Step 4: Klik Button SIMPAN
 
@@ -1007,17 +927,9 @@ Penjelasan:
 5. Klik OK, pop dialog dan pop page, kembali ke list produk
 6. Data baru sudah ada di list
 
-#### Step 5: Loading
+#### Step 5: Kembali ke List
 
-[INSERT SCREENSHOT: Button SIMPAN dengan loading spinner]
-
-#### Step 6: Sukses Tambah
-
-[INSERT SCREENSHOT: SuccessDialog "Produk berhasil ditambahkan"]
-
-#### Step 7: Kembali ke List
-
-[INSERT SCREENSHOT: Halaman list produk dengan item baru]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (29)" src="https://github.com/user-attachments/assets/e9e42a08-4c66-47b9-be0e-fa35ee08e5df" />
 
 Penjelasan: Setelah klik OK di success dialog, navigate back ke halaman list. Produk baru sudah tampil di list.
 
@@ -1025,7 +937,7 @@ Penjelasan: Setelah klik OK di success dialog, navigate back ke halaman list. Pr
 
 #### Step 1: Buka Halaman Detail Produk
 
-[INSERT SCREENSHOT: Halaman detail produk dengan button EDIT]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (32)" src="https://github.com/user-attachments/assets/3a540711-a435-4d0d-bd2a-9aba1533bda4" />
 
 Penjelasan: Dari list produk, user klik item produk untuk membuka detail. Di halaman detail, ada button EDIT.
 
@@ -1048,7 +960,7 @@ ElevatedButton(
 
 #### Step 3: Halaman Form Edit
 
-[INSERT SCREENSHOT: Form sudah pre-filled dengan data produk lama]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (31)" src="https://github.com/user-attachments/assets/007451d4-46d8-4ca8-8c53-68c6ccbcb8c6" />
 
 Penjelasan: Form menampilkan data produk yang lama (sudah terisi). User bisa ubah data.
 
@@ -1069,7 +981,7 @@ void initState() {
 
 #### Step 4: Ubah Data
 
-[INSERT SCREENSHOT: Form dengan data yang sudah diubah]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (32)" src="https://github.com/user-attachments/assets/4697420a-1df7-4d8f-88c4-929a4284e624" />
 
 Contoh perubahan:
 - Harga dari 5000000 menjadi 4800000
@@ -1136,17 +1048,10 @@ Penjelasan:
 5. Klik OK, pop 3 layer (dialog, form, detail) untuk kembali ke list
 6. Data di list sudah ter-update
 
-#### Step 6: Loading
 
-[INSERT SCREENSHOT: Button UBAH dengan loading spinner]
+#### Step 6: Lihat Hasil Update
 
-#### Step 7: Sukses Edit
-
-[INSERT SCREENSHOT: SuccessDialog "Produk berhasil diubah"]
-
-#### Step 8: Lihat Hasil Update
-
-[INSERT SCREENSHOT: List produk dengan harga yang sudah berubah]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (33)" src="https://github.com/user-attachments/assets/7108a153-f91e-49d5-9fe2-585c75a4a18b" />
 
 ### D. DELETE - Hapus Produk
 
