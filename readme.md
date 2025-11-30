@@ -1057,7 +1057,7 @@ Penjelasan:
 
 #### Step 1: Buka Halaman Detail Produk
 
-[INSERT SCREENSHOT: Halaman detail dengan button HAPUS]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (31)" src="https://github.com/user-attachments/assets/da118e04-cf1d-40bf-aed7-1c044d1b69a2" />
 
 #### Step 2: Klik Button HAPUS
 
@@ -1072,8 +1072,6 @@ ElevatedButton(
 ```
 
 #### Step 3: Confirmation Dialog
-
-[INSERT SCREENSHOT: Dialog konfirmasi "Yakin ingin menghapus?"]
 
 Kode Confirmation Dialog:
 
@@ -1104,11 +1102,7 @@ void _showDeleteDialog() {
 }
 ```
 
-#### Step 4: Klik YA untuk Confirm
-
-[INSERT SCREENSHOT: Dialog hilang, loading spinner]
-
-#### Step 5: Proses Hapus
+#### Step 4: Proses Hapus
 
 Kode Proses Delete:
 
@@ -1157,12 +1151,9 @@ Penjelasan:
 3. Klik OK, pop 3 layer untuk kembali ke list
 4. Produk sudah hilang dari list
 
-#### Step 6: Sukses Hapus
 
-[INSERT SCREENSHOT: SuccessDialog "Produk berhasil dihapus"]
+#### Step 6: List Ter-update
 
-#### Step 7: List Ter-update
-
-[INSERT SCREENSHOT: List produk tanpa item yang dihapus]
+<img width="429" height="872" alt="iPhone-13-PRO-localhost (26)" src="https://github.com/user-attachments/assets/34e9756f-acfd-469f-bec9-452ab02d2d08" />
 
 ---
