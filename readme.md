@@ -2,7 +2,7 @@
 
 Nama: Jeskris Oktovianus Silahooy  
 NIM: H1D023003  
-Shift: A->C
+Shift: C->A
 
 ---
 
