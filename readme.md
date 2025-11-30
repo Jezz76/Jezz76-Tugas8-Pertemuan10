@@ -1,22 +1,6 @@
 # Aplikasi Toko Kita - CRUD Flutter dengan REST API
 
-Nama: Jeslan Surya Utama  
-NIM: Jezz76  
-Tugas: Pertemuan 11 - CRUD 2  
-
----
-
-## Daftar Isi
-
-1. Dependencies
-2. Struktur Project
-3. Implementasi Helpers
-4. Implementasi Bloc
-5. Implementasi UI Pages
-6. Implementasi Widget Dialog
-7. Cara Menjalankan
-8. Testing
-9. Screenshot
+Nama: Jeskris Oktovianus Silahooy (H1D023003)
 
 ---
 
@@ -769,58 +753,74 @@ DELETE:
 
 ## Screenshot
 
-Halaman Login
+### Halaman Login
 
-[SCREENSHOT LOGIN PAGE]
+Menampilkan form login dengan email dan password.
 
-Halaman Registrasi
-
-[SCREENSHOT REGISTRASI PAGE]
-
-Halaman List Produk
-
-[SCREENSHOT PRODUCT LIST PAGE]
-
-Halaman Tambah Produk
-
-[SCREENSHOT FORM TAMBAH PRODUK]
-
-Halaman Detail Produk
-
-[SCREENSHOT PRODUCT DETAIL]
-
-Halaman Edit Produk
-
-[SCREENSHOT FORM EDIT PRODUK]
-
-Dialog Konfirmasi Hapus
-
-[SCREENSHOT CONFIRM DELETE]
-
-Dialog Sukses
-
-[SCREENSHOT SUCCESS DIALOG]
-
-Dialog Error
-
-[SCREENSHOT ERROR DIALOG]
+![Login Page]
 
 ---
 
-## Referensi
+### Halaman Registrasi
 
-1. A. Sasongko, M.S. Maulana & W. Nugraha. "Web Programming; Membangun Aplikasi Mobile Kolaborasi Antara Flutter dan Codeigniter". Graha Ilmu. 2019.
+Form registrasi untuk membuat akun baru dengan validasi lengkap.
 
-2. https://flutter.dev/multi-platform/mobile
-
-3. https://developer.android.com/studio
-
-4. A. Sasongko, M.S. Maulana, & Latifah. "Presensi Karyawan Berbasis Aplikasi Mobile Dengan Filter Jaringan Intranet Dan Imei". Jurnal Sistemasi, vol. 9, no. 1, pp. 92-102, 2020.
+![Registrasi Page]
 
 ---
 
-Nama: Jeslan Surya Utama  
-Tanggal: 30 November 2025  
-Flutter SDK: 3.9.2+  
-Dart: 3.0+
+### Halaman List Produk
 
+Menampilkan daftar semua produk dengan tombol tambah di AppBar.
+
+![Product List Page]
+
+---
+
+### Halaman Tambah Produk
+
+Form untuk menambah produk baru dengan input kode, nama, dan harga.
+
+![Form Tambah Produk]
+
+---
+
+### Halaman Detail Produk
+
+Menampilkan detail lengkap produk dengan tombol edit dan hapus.
+
+![Product Detail]
+
+---
+
+### Halaman Edit Produk
+
+Form untuk mengubah data produk yang sudah ada.
+
+![Form Edit Produk]
+
+---
+
+### Dialog Konfirmasi Hapus
+
+Dialog konfirmasi sebelum menghapus produk.
+
+![Confirm Delete Dialog]
+
+---
+
+### Dialog Sukses
+
+Dialog yang tampil setelah operasi berhasil dilakukan.
+
+![Success Dialog]
+
+---
+
+### Dialog Error
+
+Dialog yang tampil ketika terjadi kesalahan.
+
+![Error Dialog]
+
+---
